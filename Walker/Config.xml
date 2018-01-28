@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <General>
+    
+  </General>
+  <Lidar>
+    <!--以行进方向为X，另外一个方向为Y，起始点X为0，靠入口Y为0-->
+    <Entry ID="1">
+      <Height></Height>
+      <PaddingY></PaddingY>
+      <Direction></Direction>
+    </Entry>
+    <Entry ID="2">
+      <Height></Height>
+      <PaddingY></PaddingY>
+      <Direction></Direction>
+    </Entry>
+  </Lidar>
+  <Yard>
+    <Region ID ="1">
+      <MaxX></MaxX>
+      <MinX></MinX>
+      <MaxY></MaxY>
+      <MinY></MinY>
+    </Region>
+    <Region ID ="2">
+      <MaxX></MaxX>
+      <MinX></MinX>
+      <MaxY></MaxY>
+      <MinY></MinY>
+    </Region>
+  </Yard>
+</Config>
