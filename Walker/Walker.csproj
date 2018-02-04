@@ -100,6 +100,10 @@
       <Project>{c04dd389-5332-4b9b-b1d9-8a4db871d496}</Project>
       <Name>LMS111</Name>
     </ProjectReference>
+    <ProjectReference Include="..\modbus\Modbus.csproj">
+      <Project>{1b6d39f2-1023-4573-8a01-e7825b8de0ce}</Project>
+      <Name>Modbus</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

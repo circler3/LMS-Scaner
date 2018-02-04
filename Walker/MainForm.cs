@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Walker
 {
@@ -33,9 +27,14 @@ namespace Walker
             LMS111.Program.Init();
         }
 
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private async void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            LMS111.Program.SendRequest();
+            //扫描仪数据采集
+            await LMS111.Program.SendRequestAsync();
+            //5个图像采集
+            await Modbus.Program.Capture5PhotosAsync();
+            //单独图像拍摄
+            await Modbus.Program.CaptureSinglePhotoAsync();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -45,9 +44,36 @@ namespace Walker
             //停止511写入文件数据循环
             LMS111.Program.Stop();
             //停止5个图像采集
-
             //停止单独图像拍摄
+        }
 
+
+        private async void btnPLCSet_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                await Modbus.Program.SendPLC(GetUShort(tbPortNum.Text), GetUShort(tbRegisterAddress.Text), GetUShort(tbPulseCount.Text));
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private ushort GetUShort(string text)
+        {
+            if (Regex.IsMatch(text, @"/^\d+$/ "))
+            {
+                return Convert.ToUInt16(text);
+            }
+            else if (Regex.IsMatch(text, @"^0x[a-f0-9]{1,2}$)|(^0X[A-F0-9]{1,2}$)|(^[A-F0-9]{1,2}$)|(^[a-f0-9]{1,2}$"))
+            {
+                return Convert.ToUInt16(text, 16);
+            }
+            else
+            {
+                throw new FormatException("输入数值不合法");
+            }
         }
     }
 }

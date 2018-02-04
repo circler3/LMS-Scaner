@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,10 +10,6 @@
     <PackageReference Include="NModbus" Version="3.0.48" />
     <PackageReference Include="NModbus.Serial" Version="3.0.48" />
     <PackageReference Include="System.IO.Ports" Version="4.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\LMS111\LMS111.csproj" />
   </ItemGroup>
 
 </Project>

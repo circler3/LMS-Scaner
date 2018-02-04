@@ -14,14 +14,14 @@ namespace LMS111
         static TcpClient[] clients = new TcpClient[DEVICECOUNT];
         static NetworkStream[] streams = new NetworkStream[DEVICECOUNT];
 
-        public static void SendRequest()
+        public async static Task SendRequestAsync()
         {
             byte[] bytes = { 0x02, 0x73, 0x52, 0x4E, 0x20, 0x4C, 0x4D, 0x44, 0x73, 0x63, 0x61, 0x6E, 0x64, 0x61, 0x74, 0x61, 0x03 };
             foreach (var n in streams)
             {
                 if (n.CanWrite)
                 {
-                    n.Write(bytes, 0, bytes.Length);
+                    await n.WriteAsync(bytes, 0, bytes.Length);
                 }
             }
         }
@@ -181,6 +181,7 @@ namespace LMS111
         public static DateTime TimeStamp { get; set; }
         public static DataBroker DataBrokerLeft { get; set; }
         public static DataBroker DataBrokerRight { get; set; }
+        public static string Folder { get; set; }
 
         public static void Init()
         {
@@ -189,8 +190,8 @@ namespace LMS111
             var totalSec = 40.3;
             Speed = distance / totalSec;
             TimeStamp = DateTime.Now;
-            DataBrokerLeft = new DataBroker("ScanL " + DateTime.Now + ".OBJ");
-            DataBrokerRight = new DataBroker("ScanR " + DateTime.Now + ".OBJ");
+            DataBrokerLeft = new DataBroker(Folder + "ScanL " + DateTime.Now + ".OBJ");
+            DataBrokerRight = new DataBroker(Folder + "ScanR " + DateTime.Now + ".OBJ");
 
 
             for (int i = 0; i < DEVICECOUNT; i++)
