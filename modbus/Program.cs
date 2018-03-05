@@ -41,7 +41,7 @@ namespace Modbus
             }
         }
 
-        public static async Task CaptureSinglePhotoAsync()
+        public static async Task CaptureSinglePhotoAsync(string dataFolder)
         {
             TcpClient client = new TcpClient("192.168.1.11", 8500);
             var stream = client.GetStream();
@@ -90,7 +90,7 @@ namespace Modbus
                 });
         }
 
-        public static async Task Capture5PhotosAsync()
+        public static async Task Capture5PhotosAsync(string dataFolder)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -123,17 +123,17 @@ namespace Modbus
                 Parallel.For(1, 6, async i =>
                 {
                     var stream = await client.GetStreamAsync("http://192.168.1.83" + list[i]);
-                    var fs = new System.IO.FileStream(FileGen(i, list[i]), System.IO.FileMode.Create);
+                    var fs = new System.IO.FileStream(FileGen(i, list[i], dataFolder), System.IO.FileMode.Create);
                     await stream.CopyToAsync(fs);
                 });
 
             }
         }
 
-        private static string FileGen(int index, string name)
+        private static string FileGen(int index, string name, string parentFolder)
         {
             StringBuilder filename = new StringBuilder();
-            filename.Append()
+            filename.Append(parentFolder);
             filename.Append(index);
             filename.Append("-");
             filename.Append(DateTime.Now);

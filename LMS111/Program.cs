@@ -14,7 +14,7 @@ namespace LMS111
         static TcpClient[] clients = new TcpClient[DEVICECOUNT];
         static NetworkStream[] streams = new NetworkStream[DEVICECOUNT];
 
-        public async static Task SendRequestAsync()
+        public async static Task SendRequestAsync(string dataFolder)
         {
             byte[] bytes = { 0x02, 0x73, 0x52, 0x4E, 0x20, 0x4C, 0x4D, 0x44, 0x73, 0x63, 0x61, 0x6E, 0x64, 0x61, 0x74, 0x61, 0x03 };
             foreach (var n in streams)
@@ -103,8 +103,7 @@ namespace LMS111
 
         private static void ParsePacket(object str)
         {
-            List<OriginPoint> pointList = new List<OriginPoint>();
-
+            List<SpatialPoint> spList = new List<SpatialPoint>();
             var datagram = str as string;
             if (datagram.IndexOf("sRA LMDscandata") < 0)
                 return;
@@ -139,30 +138,31 @@ namespace LMS111
             {
                 String aDataItem = parts[index];
                 float distance = int.Parse(aDataItem, NumberStyles.HexNumber) / 1000f;
-                float angel = startAngel1 + (index - 26) * step;
+                float angle = startAngel1 + (index - 26) * step;
                 if (distance == 0.0)
                 {
                     continue;
                 }
-                pointList.Add(new OriginPoint(distance, angel));
+                //pointList.Add(new OriginPoint(distance, angel));
+                spList.Add(Format(distance, angle, x));
             }
-            if (pointList.Count < 170)
+            if (spList.Count < 170)
             {
                 return;
             }
             else
             {
-                foreach (var n in pointList)
+                foreach (var n in spList)
                 {
-                    if (x > 3500 && x < 6733)
+                    if (n.Y > 3500 && n.Y < 6733)
                     {
                         //LEFT
-                        DataBrokerLeft.Enqueue(Format(n, x));
+                        DataBrokerLeft.Enqueue(n);
                     }
                     else
                     {
                         //RIGHT
-                        DataBrokerRight.Enqueue(Format(n, x));
+                        DataBrokerRight.Enqueue(n);
                     }
                 }
             }
@@ -177,19 +177,31 @@ namespace LMS111
             return new SpatialPoint() { X = x, Y = y, Z = z };
         }
 
+        static SpatialPoint Format(double distance, double angle, double x)
+        {
+            float deltaY = 43;
+            float totalH = 3.2f;
+            var y = deltaY + distance * Math.Cos(angle);
+            var z = totalH - distance * Math.Sin(angle);
+            return new SpatialPoint() { X = x, Y = y, Z = z };
+        }
+
         public static double Speed { get; set; }
         public static DateTime TimeStamp { get; set; }
         public static DataBroker DataBrokerLeft { get; set; }
         public static DataBroker DataBrokerRight { get; set; }
-        public static string Folder { get; set; }
+        public static string Folder { get; set; } = "data\\";
 
-        public static void Init()
+        public static string Init()
         {
             //init parameters
             float distance = 400;
             var totalSec = 40.3;
             Speed = distance / totalSec;
             TimeStamp = DateTime.Now;
+            System.IO.Directory.CreateDirectory(Folder);
+            Folder = Folder + TimeStamp;
+            System.IO.Directory.CreateDirectory(Folder);
             DataBrokerLeft = new DataBroker(Folder + "ScanL " + DateTime.Now + ".OBJ");
             DataBrokerRight = new DataBroker(Folder + "ScanR " + DateTime.Now + ".OBJ");
 
@@ -204,6 +216,8 @@ namespace LMS111
                 th0.IsBackground = true;
                 th0.Start(i);
             }
+
+            return Folder;
         }
 
     }

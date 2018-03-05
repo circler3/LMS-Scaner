@@ -12,6 +12,7 @@ namespace Walker
         }
 
         System.Timers.Timer timer = new System.Timers.Timer();
+        private string dataFolder;
 
         private void BtnFullScan_Click(object sender, EventArgs e)
         {
@@ -24,17 +25,17 @@ namespace Walker
 
         public void Init()
         {
-            LMS111.Program.Init();
+            dataFolder = LMS111.Program.Init();
         }
 
         private async void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //扫描仪数据采集
-            await LMS111.Program.SendRequestAsync();
+            await LMS111.Program.SendRequestAsync(dataFolder);
             //5个图像采集
-            await Modbus.Program.Capture5PhotosAsync();
+            await Modbus.Program.Capture5PhotosAsync(dataFolder);
             //单独图像拍摄
-            await Modbus.Program.CaptureSinglePhotoAsync();
+            await Modbus.Program.CaptureSinglePhotoAsync(dataFolder);
         }
 
         private void btnStop_Click(object sender, EventArgs e)
