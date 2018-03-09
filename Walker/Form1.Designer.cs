@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tbModbusID = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbRegisterAddress = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tbPortNum = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -37,10 +41,6 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnFullScan = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbRegisterAddress = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbModbusID = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -69,6 +69,40 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "PLC连接";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(15, 122);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(77, 12);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "ModbusRTU ID";
+            // 
+            // tbModbusID
+            // 
+            this.tbModbusID.Location = new System.Drawing.Point(158, 119);
+            this.tbModbusID.Name = "tbModbusID";
+            this.tbModbusID.Size = new System.Drawing.Size(100, 21);
+            this.tbModbusID.TabIndex = 7;
+            this.tbModbusID.Text = "1";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(15, 89);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(65, 12);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "寄存器地址";
+            // 
+            // tbRegisterAddress
+            // 
+            this.tbRegisterAddress.Location = new System.Drawing.Point(158, 86);
+            this.tbRegisterAddress.Name = "tbRegisterAddress";
+            this.tbRegisterAddress.Size = new System.Drawing.Size(100, 21);
+            this.tbRegisterAddress.TabIndex = 5;
+            this.tbRegisterAddress.Text = "44107";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -84,6 +118,7 @@
             this.tbPortNum.Name = "tbPortNum";
             this.tbPortNum.Size = new System.Drawing.Size(100, 21);
             this.tbPortNum.TabIndex = 3;
+            this.tbPortNum.Text = "6";
             // 
             // label1
             // 
@@ -100,6 +135,7 @@
             this.tbPulseCount.Name = "tbPulseCount";
             this.tbPulseCount.Size = new System.Drawing.Size(100, 21);
             this.tbPulseCount.TabIndex = 1;
+            this.tbPulseCount.Text = "420000";
             // 
             // btnPLCSet
             // 
@@ -142,38 +178,6 @@
             this.btnFullScan.UseVisualStyleBackColor = true;
             this.btnFullScan.Click += new System.EventHandler(this.BtnFullScan_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 89);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "寄存器地址";
-            // 
-            // tbRegisterAddress
-            // 
-            this.tbRegisterAddress.Location = new System.Drawing.Point(158, 86);
-            this.tbRegisterAddress.Name = "tbRegisterAddress";
-            this.tbRegisterAddress.Size = new System.Drawing.Size(100, 21);
-            this.tbRegisterAddress.TabIndex = 5;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 122);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(77, 12);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "ModbusRTU ID";
-            // 
-            // tbModbusID
-            // 
-            this.tbModbusID.Location = new System.Drawing.Point(158, 119);
-            this.tbModbusID.Name = "tbModbusID";
-            this.tbModbusID.Size = new System.Drawing.Size(100, 21);
-            this.tbModbusID.TabIndex = 7;
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label5);
@@ -185,7 +189,7 @@
             this.groupBox3.Size = new System.Drawing.Size(277, 100);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "groupBox3";
+            this.groupBox3.Text = "行走";
             // 
             // label5
             // 

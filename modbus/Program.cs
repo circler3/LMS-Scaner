@@ -14,7 +14,7 @@ namespace Modbus
 {
     public class Program
     {
-        public static async Task SendPLC(ushort pt, ushort address, ushort value)
+        public static async Task SendPLC(ushort pt, ushort address, int value)
         {
             using (SerialPort port = new SerialPort("COM" + pt))
             {
@@ -35,24 +35,27 @@ namespace Modbus
                 //ushort startAddress = 100;
                 ////ushort[] registers = new ushort[] { 1, 2, 3 };
                 //ushort register = 1;
-
+                ushort[] result = new ushort[]{
+                    BitConverter.ToUInt16(BitConverter.GetBytes(value), 2),
+                BitConverter.ToUInt16(BitConverter.GetBytes(value), 0) };
                 // write three registers
-                await master.WriteSingleRegisterAsync(slaveId, address, value);
+                await master.WriteMultipleRegistersAsync(slaveId, address, result);
             }
         }
 
         public static async Task CaptureSinglePhotoAsync(string dataFolder)
         {
-            TcpClient client = new TcpClient("192.168.1.11", 8500);
+            TcpClient client = new TcpClient("192.168.1.20", 8500);
             var stream = client.GetStream();
-            client.ReceiveTimeout = 1000;
+            stream.ReadTimeout = 100000;
+            client.ReceiveTimeout = 10000;
             Byte[] data = Encoding.ASCII.GetBytes("BC,CM\r");
             stream.Write(data, 0, data.Length);
             data = new Byte[1024 * 1024];
 
             // String to store the response ASCII representation.
             String responseData = String.Empty;
-            var file = System.IO.File.Create(FileGen(0, null));
+            var file = System.IO.File.Create(FileGen(0, "ss", dataFolder));
             // Read the first batch of the TcpServer response bytes.
             await Task.Run(
                 () =>
@@ -63,21 +66,21 @@ namespace Modbus
                         int count = 0;
                         while (true)
                         {
+                            int index = 0;
                             Int32 bytes = stream.Read(data, 0, data.Length);
                             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
                             if (responseData.StartsWith("BC,"))
                             {
                                 var str = responseData.Split(',');
                                 count = Convert.ToInt32(str[1]) - 1;
-                                continue;
+                                index = responseData.IndexOf(",BM6") + 1;
                             }
                             if (current + bytes > count)
                             {
-                                break;
                                 bytes = count - current;
                             }
-                            file.Write(data, 0, bytes);
-                            current += bytes;
+                            file.Write(data, index, bytes - index);
+                            current += bytes - index;
                         }
                     }
                     finally
@@ -118,9 +121,9 @@ namespace Modbus
                 List<string> list = new List<string>();
                 for (int i = 1; i <= 5; i++)
                 {
-                    list.Add(address["raw_cache_path"][i].ToString());
+                    list.Add(address["raw_cache_path"][i.ToString()].ToString());
                 }
-                Parallel.For(1, 6, async i =>
+                Parallel.For(0, 5, async i =>
                 {
                     var stream = await client.GetStreamAsync("http://192.168.1.83" + list[i]);
                     var fs = new System.IO.FileStream(FileGen(i, list[i], dataFolder), System.IO.FileMode.Create);
@@ -136,7 +139,7 @@ namespace Modbus
             filename.Append(parentFolder);
             filename.Append(index);
             filename.Append("-");
-            filename.Append(DateTime.Now);
+            filename.Append(DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"));
             if (index == 0)
                 filename.Append(".bmp");
             else

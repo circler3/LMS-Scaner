@@ -16,11 +16,13 @@ namespace Walker
 
         private void BtnFullScan_Click(object sender, EventArgs e)
         {
-            Init();
-            timer.Elapsed += Timer_Elapsed;
-            timer.Interval = 5000;
-            timer.AutoReset = true;
-            timer.Start();
+            //Modbus.Program.CaptureSinglePhotoAsync("d:\\");
+            Modbus.Program.Capture5PhotosAsync("d:\\");
+            //Init();
+            //timer.Elapsed += Timer_Elapsed;
+            //timer.Interval = 5000;
+            //timer.AutoReset = true;
+            //timer.Start();
         }
 
         public void Init()
@@ -53,7 +55,7 @@ namespace Walker
         {
             try
             {
-                await Modbus.Program.SendPLC(GetUShort(tbPortNum.Text), GetUShort(tbRegisterAddress.Text), GetUShort(tbPulseCount.Text));
+                await Modbus.Program.SendPLC(GetUShort(tbPortNum.Text), GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
             }
             catch (Exception err)
             {
@@ -63,18 +65,19 @@ namespace Walker
 
         private ushort GetUShort(string text)
         {
-            if (Regex.IsMatch(text, @"/^\d+$/ "))
-            {
-                return Convert.ToUInt16(text);
-            }
-            else if (Regex.IsMatch(text, @"^0x[a-f0-9]{1,2}$)|(^0X[A-F0-9]{1,2}$)|(^[A-F0-9]{1,2}$)|(^[a-f0-9]{1,2}$"))
-            {
-                return Convert.ToUInt16(text, 16);
-            }
-            else
-            {
-                throw new FormatException("输入数值不合法");
-            }
+            //if (Regex.IsMatch(text, @"/^\d+$/ "))
+            //{
+            //    return Convert.ToUInt16(text);
+            //}
+            //else if (Regex.IsMatch(text, @"^0x[a-f0-9]{1,2}$)|(^0X[A-F0-9]{1,2}$)|(^[A-F0-9]{1,2}$)|(^[a-f0-9]{1,2}$"))
+            //{
+            //    return Convert.ToUInt16(text, 16);
+            //}
+            //else
+            //{
+            //    throw new FormatException("输入数值不合法");
+            //}
+            return Convert.ToUInt16(text);
         }
     }
 }

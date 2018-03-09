@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="NModbus" Version="3.0.48" />
-    <PackageReference Include="NModbus.Serial" Version="3.0.48" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="NModBus" Version="3.0.50" />
+    <PackageReference Include="NModBus.serial" Version="3.0.48" />
     <PackageReference Include="System.IO.Ports" Version="4.4.0" />
   </ItemGroup>
 

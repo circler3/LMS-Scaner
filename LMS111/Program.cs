@@ -200,16 +200,16 @@ namespace LMS111
             Speed = distance / totalSec;
             TimeStamp = DateTime.Now;
             System.IO.Directory.CreateDirectory(Folder);
-            Folder = Folder + TimeStamp;
+            Folder = Folder + TimeStamp.ToString("yyyyMMdd");
             System.IO.Directory.CreateDirectory(Folder);
-            DataBrokerLeft = new DataBroker(Folder + "ScanL " + DateTime.Now + ".OBJ");
-            DataBrokerRight = new DataBroker(Folder + "ScanR " + DateTime.Now + ".OBJ");
+            DataBrokerLeft = new DataBroker(Folder + "ScanL " + DateTime.Now.ToString("yyyyMMddHHmmss") + ".OBJ");
+            DataBrokerRight = new DataBroker(Folder + "ScanR " + DateTime.Now.ToString("yyyyMMddHHmmss") + ".OBJ");
 
 
             for (int i = 0; i < DEVICECOUNT; i++)
             {
                 segments[i] = new byte[1024 * 1024];
-                clients[i] = new TcpClient("127.0.0.1", 2112);
+                clients[i] = new TcpClient("192.168.1.2" + (i + 1), 2112);
                 streams[i] = clients[i].GetStream();
                 Thread th0 = new Thread(Listen);
                 th0.Name = "ListenThread" + i;
