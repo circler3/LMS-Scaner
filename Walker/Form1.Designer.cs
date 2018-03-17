@@ -43,9 +43,9 @@
             this.btnFullScan = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBoxDistance = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBoxTime = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -118,7 +118,7 @@
             this.tbPortNum.Name = "tbPortNum";
             this.tbPortNum.Size = new System.Drawing.Size(100, 21);
             this.tbPortNum.TabIndex = 3;
-            this.tbPortNum.Text = "6";
+            this.tbPortNum.Text = "3";
             // 
             // label1
             // 
@@ -135,7 +135,7 @@
             this.tbPulseCount.Name = "tbPulseCount";
             this.tbPulseCount.Size = new System.Drawing.Size(100, 21);
             this.tbPulseCount.TabIndex = 1;
-            this.tbPulseCount.Text = "420000";
+            this.tbPulseCount.Text = "4200";
             // 
             // btnPLCSet
             // 
@@ -181,9 +181,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Controls.Add(this.textBox3);
+            this.groupBox3.Controls.Add(this.textBoxDistance);
             this.groupBox3.Controls.Add(this.label6);
-            this.groupBox3.Controls.Add(this.textBox4);
+            this.groupBox3.Controls.Add(this.textBoxTime);
             this.groupBox3.Location = new System.Drawing.Point(305, 13);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(277, 100);
@@ -196,16 +196,16 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(6, 55);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 12);
+            this.label5.Size = new System.Drawing.Size(107, 12);
             this.label5.TabIndex = 12;
-            this.label5.Text = "单程行走距离";
+            this.label5.Text = "单程行走距离（m）";
             // 
-            // textBox3
+            // textBoxDistance
             // 
-            this.textBox3.Location = new System.Drawing.Point(149, 52);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 21);
-            this.textBox3.TabIndex = 11;
+            this.textBoxDistance.Location = new System.Drawing.Point(149, 52);
+            this.textBoxDistance.Name = "textBoxDistance";
+            this.textBoxDistance.Size = new System.Drawing.Size(100, 21);
+            this.textBoxDistance.TabIndex = 11;
             // 
             // label6
             // 
@@ -216,12 +216,12 @@
             this.label6.TabIndex = 10;
             this.label6.Text = "单趟时间（s）";
             // 
-            // textBox4
+            // textBoxTime
             // 
-            this.textBox4.Location = new System.Drawing.Point(149, 19);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 21);
-            this.textBox4.TabIndex = 9;
+            this.textBoxTime.Location = new System.Drawing.Point(149, 19);
+            this.textBoxTime.Name = "textBoxTime";
+            this.textBoxTime.Size = new System.Drawing.Size(100, 21);
+            this.textBoxTime.TabIndex = 9;
             // 
             // MainForm
             // 
@@ -259,9 +259,9 @@
         private System.Windows.Forms.TextBox tbRegisterAddress;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBoxDistance;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBoxTime;
     }
 }
 

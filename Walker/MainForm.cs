@@ -17,27 +17,27 @@ namespace Walker
         private void BtnFullScan_Click(object sender, EventArgs e)
         {
             //Modbus.Program.CaptureSinglePhotoAsync("d:\\");
-            Modbus.Program.Capture5PhotosAsync("d:\\");
-            //Init();
+            ModbusClassic.Program.Capture5PhotosAsync("d:\\");
+            Init(Convert.ToDouble(textBoxDistance.Text), Convert.ToDouble(textBoxTime.Text));
             //timer.Elapsed += Timer_Elapsed;
             //timer.Interval = 5000;
             //timer.AutoReset = true;
             //timer.Start();
         }
 
-        public void Init()
+        public void Init(double distance, double totalSecond)
         {
-            dataFolder = LMS111.Program.Init();
+            dataFolder = LMS111Classic.Program.Init(distance,totalSecond);
         }
 
         private async void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //扫描仪数据采集
-            await LMS111.Program.SendRequestAsync(dataFolder);
+            await LMS111Classic.Program.SendRequestAsync(dataFolder);
             //5个图像采集
-            await Modbus.Program.Capture5PhotosAsync(dataFolder);
+            await ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
             //单独图像拍摄
-            await Modbus.Program.CaptureSinglePhotoAsync(dataFolder);
+            await ModbusClassic.Program.CaptureSinglePhotoAsync(dataFolder);
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -45,7 +45,7 @@ namespace Walker
             //停止大循环定时器
             timer.Stop();
             //停止511写入文件数据循环
-            LMS111.Program.Stop();
+            LMS111Classic.Program.Stop();
             //停止5个图像采集
             //停止单独图像拍摄
         }
@@ -55,7 +55,7 @@ namespace Walker
         {
             try
             {
-                await Modbus.Program.SendPLC(GetUShort(tbPortNum.Text), GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
+                await ModbusClassic.Program.SendPLC(GetUShort(tbPortNum.Text), GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
             }
             catch (Exception err)
             {
