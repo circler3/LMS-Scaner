@@ -180,18 +180,18 @@ namespace LMS111Classic
 
         static SpatialPoint Format(int index, double distance, double angle, double y)
         {
-            float deltaXLeft = 1.82f;
-            float deltaXRight = 4.96f;
+            float deltaXLeft = 2.195f;
+            float deltaXRight = 5.505f;
             float totalH = 2.25f;
             double x = 0;
             if (index == 0)
             {
                 //left
-                x = deltaXLeft + distance * Math.Cos(angle);
+                x = deltaXLeft - distance * Math.Cos(angle);
             }
             else
             {
-                x = deltaXRight + distance * Math.Cos(angle);
+                x = deltaXRight - distance * Math.Cos(angle);
             }
             var z = totalH - distance * Math.Sin(angle);
             return new SpatialPoint() { X = x, Y = y, Z = z };

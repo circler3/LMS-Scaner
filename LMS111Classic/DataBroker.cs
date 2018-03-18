@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -7,7 +8,7 @@ namespace LMS111Classic
 {
     public class DataBroker
     {
-        private Queue<SpatialPoint> queue = new Queue<SpatialPoint>();
+        private ConcurrentQueue<SpatialPoint> queue = new ConcurrentQueue<SpatialPoint>();
         private string objFilename;
 
         System.Timers.Timer timer;
@@ -30,12 +31,17 @@ namespace LMS111Classic
         {
             timer.Stop();
             StringBuilder sb = new StringBuilder();
-            while (queue.Count != 0)
+            while (!queue.IsEmpty)
             {
-                var data = queue.Dequeue();
-                sb.Append("v " + data.X + " ");
-                sb.Append(data.Y + " ");
-                sb.Append(data.Z + System.Environment.NewLine);
+                SpatialPoint spatialPoint;
+                var result = queue.TryDequeue(out spatialPoint);
+                if (!result)
+                {
+                    break;
+                }
+                sb.Append("v " + spatialPoint.X + " ");
+                sb.Append(spatialPoint.Y + " ");
+                sb.Append(spatialPoint.Z + Environment.NewLine);
             }
             File.AppendAllText(objFilename, sb.ToString());
             if (timer != null)
