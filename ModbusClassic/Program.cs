@@ -48,7 +48,7 @@ namespace ModbusClassic
 
             byte slaveId = 1;
             await master.WriteSingleCoilAsync(slaveId, address, true);
-            //await master.WriteSingleCoilAsync(slaveId, address, false);
+            await master.WriteSingleCoilAsync(slaveId, address, false);
         }
 
         public static async Task CaptureSinglePhotoAsync(string dataFolder)

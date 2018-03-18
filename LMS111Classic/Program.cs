@@ -75,7 +75,7 @@ namespace LMS111Classic
             {
                 offset[index] = 0;
             }
-            Console.WriteLine(offset[index]);
+            //Console.WriteLine(offset[index]);
         }
 
         private static int Decode(int index, byte[] buffer, int startIndex, int len)
@@ -92,7 +92,7 @@ namespace LMS111Classic
                         {
                             dataProcessedIndex = i;
                             var str = Encoding.ASCII.GetString(buffer, i, j - i + 1);
-                            Task.Factory.StartNew(ParsePacket, str);
+                            Task.Factory.StartNew(ParsePacket, Tuple.Create(index, str));
                             return Decode(index, buffer, j + 1, overallSize - (j + 1));
                         }
                     }
@@ -104,7 +104,8 @@ namespace LMS111Classic
         private static void ParsePacket(object str)
         {
             List<SpatialPoint> spList = new List<SpatialPoint>();
-            var datagram = str as string;
+            var indices = (str as Tuple<int, string>).Item1;
+            var datagram = (str as Tuple<int, string>).Item2;
             if (datagram.IndexOf("sRA LMDscandata") < 0)
                 return;
 
@@ -113,7 +114,7 @@ namespace LMS111Classic
             String[] parts = datagram.Split(' ');
 
             var ts = (DateTime.Now - TimeStamp).TotalSeconds;
-            var x = ts * Speed;
+            var y = ts * Speed;
 
             try
             {
@@ -144,7 +145,7 @@ namespace LMS111Classic
                     continue;
                 }
                 //pointList.Add(new OriginPoint(distance, angel));
-                spList.Add(Format(distance, angle, x));
+                spList.Add(Format(indices, distance, angle, y));
             }
             if (spList.Count < 170)
             {
@@ -154,12 +155,12 @@ namespace LMS111Classic
             {
                 foreach (var n in spList)
                 {
-                    if (n.Y > 3500 && n.Y < 6733)
+                    if (n.X > 1.82 && n.X < 2.57)
                     {
                         //LEFT
                         DataBrokerLeft.Enqueue(n);
                     }
-                    else
+                    else if (n.X > 4.58 && n.X < 5.88)
                     {
                         //RIGHT
                         DataBrokerRight.Enqueue(n);
@@ -177,11 +178,21 @@ namespace LMS111Classic
             return new SpatialPoint() { X = x, Y = y, Z = z };
         }
 
-        static SpatialPoint Format(double distance, double angle, double x)
+        static SpatialPoint Format(int index, double distance, double angle, double y)
         {
-            float deltaY = 43;
-            float totalH = 3.2f;
-            var y = deltaY + distance * Math.Cos(angle);
+            float deltaXLeft = 1.82f;
+            float deltaXRight = 4.96f;
+            float totalH = 2.25f;
+            double x = 0;
+            if (index == 0)
+            {
+                //left
+                x = deltaXLeft + distance * Math.Cos(angle);
+            }
+            else
+            {
+                x = deltaXRight + distance * Math.Cos(angle);
+            }
             var z = totalH - distance * Math.Sin(angle);
             return new SpatialPoint() { X = x, Y = y, Z = z };
         }

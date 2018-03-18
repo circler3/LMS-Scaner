@@ -27,13 +27,14 @@ namespace Walker
             timer.Start();
             timerBack.Elapsed += TimerBack_Elapsed;
             timerBack.Interval = Convert.ToDouble(textBoxTime.Text) * 1000;
-            timer.AutoReset = false;
+            timerBack.AutoReset = false;
             await ModbusClassic.Program.SendStart(port, GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
             timerBack.Start();
         }
 
         private async void TimerBack_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            timerBack.Stop();
             await ModbusClassic.Program.SendBack(port, 2048);
         }
 

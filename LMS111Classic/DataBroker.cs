@@ -33,12 +33,20 @@ namespace LMS111Classic
             while (queue.Count != 0)
             {
                 var data = queue.Dequeue();
-                sb.Append(data.X + " ");
+                sb.Append("v " + data.X + " ");
                 sb.Append(data.Y + " ");
                 sb.Append(data.Z + System.Environment.NewLine);
             }
             File.AppendAllText(objFilename, sb.ToString());
-            if (timer!=null) timer.Start();
+            if (timer != null)
+            {
+                timer.Start();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Write timer error!");
+            }
+
         }
 
         public void Esc()

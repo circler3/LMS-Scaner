@@ -135,7 +135,7 @@
             this.tbPulseCount.Name = "tbPulseCount";
             this.tbPulseCount.Size = new System.Drawing.Size(100, 21);
             this.tbPulseCount.TabIndex = 1;
-            this.tbPulseCount.Text = "4200";
+            this.tbPulseCount.Text = "400000";
             // 
             // btnPLCSet
             // 
