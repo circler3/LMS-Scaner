@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.IO.Ports;
 
 namespace Walker
 {
@@ -12,32 +13,45 @@ namespace Walker
         }
 
         System.Timers.Timer timer = new System.Timers.Timer();
+        System.Timers.Timer timerBack = new System.Timers.Timer();
         private string dataFolder;
 
-        private void BtnFullScan_Click(object sender, EventArgs e)
+        private async void BtnFullScan_Click(object sender, EventArgs e)
         {
             //Modbus.Program.CaptureSinglePhotoAsync("d:\\");
-            ModbusClassic.Program.Capture5PhotosAsync("d:\\");
+            //ModbusClassic.Program.Capture5PhotosAsync("d:\\");
             Init(Convert.ToDouble(textBoxDistance.Text), Convert.ToDouble(textBoxTime.Text));
-            //timer.Elapsed += Timer_Elapsed;
-            //timer.Interval = 5000;
-            //timer.AutoReset = true;
-            //timer.Start();
+            timer.Elapsed += Timer_Elapsed;
+            timer.Interval = 5000;
+            timer.AutoReset = true;
+            timer.Start();
+            timerBack.Elapsed += TimerBack_Elapsed;
+            timerBack.Interval = Convert.ToDouble(textBoxTime.Text) * 1000;
+            timer.AutoReset = false;
+            await ModbusClassic.Program.SendStart(port, GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
+            timerBack.Start();
+        }
+
+        private async void TimerBack_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            await ModbusClassic.Program.SendBack(port, 2048);
         }
 
         public void Init(double distance, double totalSecond)
         {
-            dataFolder = LMS111Classic.Program.Init(distance,totalSecond);
+            dataFolder = LMS111Classic.Program.Init(distance, totalSecond);
         }
 
-        private async void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            timer.Stop();
             //扫描仪数据采集
-            await LMS111Classic.Program.SendRequestAsync(dataFolder);
+            LMS111Classic.Program.SendRequestAsync(dataFolder);
             //5个图像采集
-            await ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
+            ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
             //单独图像拍摄
-            await ModbusClassic.Program.CaptureSinglePhotoAsync(dataFolder);
+            ModbusClassic.Program.CaptureSinglePhotoAsync(dataFolder);
+            timer.Start();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -50,12 +64,22 @@ namespace Walker
             //停止单独图像拍摄
         }
 
+        public SerialPort port;
 
         private async void btnPLCSet_Click(object sender, EventArgs e)
         {
             try
             {
-                await ModbusClassic.Program.SendPLC(GetUShort(tbPortNum.Text), GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
+                if (port == null)
+                {
+                    port = new SerialPort("COM" + GetUShort(tbPortNum.Text));
+                    port.BaudRate = 9600;
+                    port.DataBits = 8;
+                    port.Parity = Parity.Even;
+                    port.StopBits = StopBits.One;
+                    port.Open();
+                }
+                //await ModbusClassic.Program.SendStart(port, GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
             }
             catch (Exception err)
             {
@@ -78,6 +102,14 @@ namespace Walker
             //    throw new FormatException("输入数值不合法");
             //}
             return Convert.ToUInt16(text);
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (port != null && port.IsOpen)
+            {
+                port.Close();
+            }
         }
     }
 }

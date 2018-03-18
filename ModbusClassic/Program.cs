@@ -15,36 +15,40 @@ namespace ModbusClassic
 {
     public class Program
     {
-        public static async Task SendPLC(ushort pt, ushort address, int value)
+        public static async Task SendStart(SerialPort port, ushort address, int value)
         {
-            using (SerialPort port = new SerialPort("COM" + pt))
-            {
-                // configure serial port
-                port.BaudRate = 9600;
-                port.DataBits = 8;
-                port.Parity = Parity.None;
-                port.StopBits = StopBits.One;
-                port.Open();
+            var adapter = new SerialPortAdapter(port);
+            // create modbus master
+            var factory = new ModbusFactory();
 
-                var adapter = new SerialPortAdapter(port);
-                // create modbus master
-                var factory = new ModbusFactory();
+            IModbusMaster master = factory.CreateRtuMaster(adapter);
 
-                IModbusMaster master = factory.CreateRtuMaster(adapter);
+            byte slaveId = 1;
+            ushort[] result = new ushort[]{
+                    BitConverter.ToUInt16(BitConverter.GetBytes(value), 0),
+                BitConverter.ToUInt16(BitConverter.GetBytes(value), 2) };
+            // write three registers
+            await master.WriteMultipleRegistersAsync(slaveId, address, result);
+            // 写入距离二
+            await master.WriteSingleCoilAsync(slaveId, 2054, true);
+            await master.WriteSingleCoilAsync(slaveId, 2054, false);
+            // 写入距离二
+            await master.WriteSingleCoilAsync(slaveId, 2078, true);
+            // read registers
+            //var x = await master.ReadHoldingRegistersAsync(slaveId, address, 2);
+            //System.Diagnostics.Debug.WriteLine(BitConverter.ToInt32(BitConverter.GetBytes(x[0]).Concat(BitConverter.GetBytes(x[1])).ToArray(), 0));
+        }
+        public static async Task SendBack(SerialPort port, ushort address)
+        {
+            var adapter = new SerialPortAdapter(port);
+            // create modbus master
+            var factory = new ModbusFactory();
 
-                byte slaveId = 1;
-                //ushort startAddress = 100;
-                ////ushort[] registers = new ushort[] { 1, 2, 3 };
-                //ushort register = 1;
-                ushort[] result = new ushort[]{
-                    BitConverter.ToUInt16(BitConverter.GetBytes(value), 2),
-                BitConverter.ToUInt16(BitConverter.GetBytes(value), 0) };
-                // write three registers
-                await master.WriteMultipleRegistersAsync(slaveId, address, result);
-                // read registers
-                var x = await master.ReadHoldingRegistersAsync(slaveId, address, 2);
-                System.Diagnostics.Debug.WriteLine( BitConverter.ToInt32( BitConverter.GetBytes(x[1]).Concat(BitConverter.GetBytes(x[0])).ToArray(), 0));
-            }
+            IModbusMaster master = factory.CreateRtuMaster(adapter);
+
+            byte slaveId = 1;
+            await master.WriteSingleCoilAsync(slaveId, address, true);
+            //await master.WriteSingleCoilAsync(slaveId, address, false);
         }
 
         public static async Task CaptureSinglePhotoAsync(string dataFolder)
@@ -87,6 +91,10 @@ namespace ModbusClassic
                             current += bytes - index;
                         }
                     }
+                    catch
+                    {
+
+                    }
                     finally
                     {
                         // Close everything.
@@ -127,13 +135,12 @@ namespace ModbusClassic
                 {
                     list.Add(address["raw_cache_path"][i.ToString()].ToString());
                 }
-                Parallel.For(0, 5, async i =>
+                for (int i = 0; i < 5; i++)
                 {
                     var stream = await client.GetStreamAsync("http://192.168.1.83" + list[i]);
-                    var fs = new System.IO.FileStream(FileGen(i, list[i], dataFolder), System.IO.FileMode.Create);
+                    var fs = new System.IO.FileStream(FileGen5(i, list[i], dataFolder), System.IO.FileMode.Create);
                     await stream.CopyToAsync(fs);
-                });
-
+                }
             }
         }
 
@@ -141,13 +148,23 @@ namespace ModbusClassic
         {
             StringBuilder filename = new StringBuilder();
             filename.Append(parentFolder);
+            filename.Append("\\");
             filename.Append(index);
             filename.Append("-");
             filename.Append(DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"));
-            if (index == 0)
-                filename.Append(".bmp");
-            else
-                filename.Append(".tif");
+            filename.Append(".bmp");
+            return filename.ToString();
+        }
+
+        private static string FileGen5(int index, string name, string parentFolder)
+        {
+            StringBuilder filename = new StringBuilder();
+            filename.Append(parentFolder);
+            filename.Append("\\");
+            filename.Append(index);
+            filename.Append("-");
+            filename.Append(DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"));
+            filename.Append(".tif");
             return filename.ToString();
         }
     }

@@ -91,9 +91,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(15, 89);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
+            this.label3.Size = new System.Drawing.Size(143, 12);
             this.label3.TabIndex = 6;
-            this.label3.Text = "寄存器地址";
+            this.label3.Text = "寄存器短地址(PLC地址-1)";
             // 
             // tbRegisterAddress
             // 
@@ -101,7 +101,7 @@
             this.tbRegisterAddress.Name = "tbRegisterAddress";
             this.tbRegisterAddress.Size = new System.Drawing.Size(100, 21);
             this.tbRegisterAddress.TabIndex = 5;
-            this.tbRegisterAddress.Text = "44107";
+            this.tbRegisterAddress.Text = "4108";
             // 
             // label2
             // 
@@ -118,7 +118,7 @@
             this.tbPortNum.Name = "tbPortNum";
             this.tbPortNum.Size = new System.Drawing.Size(100, 21);
             this.tbPortNum.TabIndex = 3;
-            this.tbPortNum.Text = "3";
+            this.tbPortNum.Text = "6";
             // 
             // label1
             // 
@@ -206,6 +206,7 @@
             this.textBoxDistance.Name = "textBoxDistance";
             this.textBoxDistance.Size = new System.Drawing.Size(100, 21);
             this.textBoxDistance.TabIndex = 11;
+            this.textBoxDistance.Text = "16.3";
             // 
             // label6
             // 
@@ -222,6 +223,7 @@
             this.textBoxTime.Name = "textBoxTime";
             this.textBoxTime.Size = new System.Drawing.Size(100, 21);
             this.textBoxTime.TabIndex = 9;
+            this.textBoxTime.Text = "143";
             // 
             // MainForm
             // 
@@ -233,6 +235,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

@@ -7,7 +7,7 @@ namespace LMS111Classic
 {
     public class DataBroker
     {
-        private Lazy<Queue<SpatialPoint>> queue = new Lazy<Queue<SpatialPoint>>();
+        private Queue<SpatialPoint> queue = new Queue<SpatialPoint>();
         private string objFilename;
 
         System.Timers.Timer timer;
@@ -16,22 +16,23 @@ namespace LMS111Classic
         {
             objFilename = objFile;
             timer = new System.Timers.Timer();
+            timer.Interval = 5000;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
         }
 
         public void Enqueue(SpatialPoint p)
         {
-            queue.Value.Enqueue(p);
+            queue.Enqueue(p);
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
             StringBuilder sb = new StringBuilder();
-            while (queue.Value.Count != 0)
+            while (queue.Count != 0)
             {
-                var data = queue.Value.Dequeue();
+                var data = queue.Dequeue();
                 sb.Append(data.X + " ");
                 sb.Append(data.Y + " ");
                 sb.Append(data.Z + System.Environment.NewLine);
