@@ -14,6 +14,7 @@ namespace Walker
 
         System.Timers.Timer timer = new System.Timers.Timer();
         System.Timers.Timer timerBack = new System.Timers.Timer();
+        System.Timers.Timer timerScan = new System.Timers.Timer();
         private string dataFolder;
 
         private async void BtnFullScan_Click(object sender, EventArgs e)
@@ -23,13 +24,26 @@ namespace Walker
             Init(Convert.ToDouble(textBoxDistance.Text), Convert.ToDouble(textBoxTime.Text));
             timer.Elapsed += Timer_Elapsed;
             timer.Interval = 5000;
-            timer.AutoReset = true;
+            timer.AutoReset = false;
             timer.Start();
+
+            timerScan.Elapsed += TimerScan_Elapsed;
+            timerScan.Interval = 1000;
+            timerScan.AutoReset = true;
+            timerScan.Start();
+
             timerBack.Elapsed += TimerBack_Elapsed;
             timerBack.Interval = Convert.ToDouble(textBoxTime.Text) * 1000;
             timerBack.AutoReset = false;
+
             await ModbusClassic.Program.SendStart(port, GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
             timerBack.Start();
+        }
+
+        private void TimerScan_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            //扫描仪数据采集
+            LMS111Classic.Program.SendRequestAsync(dataFolder);
         }
 
         private async void TimerBack_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -46,8 +60,6 @@ namespace Walker
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
-            //扫描仪数据采集
-            LMS111Classic.Program.SendRequestAsync(dataFolder);
             //5个图像采集
             ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
             //单独图像拍摄
