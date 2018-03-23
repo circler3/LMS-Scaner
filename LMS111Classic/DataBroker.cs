@@ -30,20 +30,27 @@ namespace LMS111Classic
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
-            StringBuilder sb = new StringBuilder();
-            while (!queue.IsEmpty)
+            try
             {
-                SpatialPoint spatialPoint;
-                var result = queue.TryDequeue(out spatialPoint);
-                if (!result)
+                StringBuilder sb = new StringBuilder();
+                while (!queue.IsEmpty)
                 {
-                    break;
+                    SpatialPoint spatialPoint;
+                    var result = queue.TryDequeue(out spatialPoint);
+                    if (!result)
+                    {
+                        break;
+                    }
+                    sb.Append("v " + spatialPoint.X + " ");
+                    sb.Append(spatialPoint.Y + " ");
+                    sb.Append(spatialPoint.Z + Environment.NewLine);
                 }
-                sb.Append("v " + spatialPoint.X + " ");
-                sb.Append(spatialPoint.Y + " ");
-                sb.Append(spatialPoint.Z + Environment.NewLine);
+                File.AppendAllText(objFilename, sb.ToString());
             }
-            File.AppendAllText(objFilename, sb.ToString());
+            catch (Exception ez)
+            {
+                System.Diagnostics.Debug.WriteLine(ez.Message);
+            }
             if (timer != null)
             {
                 timer.Start();
@@ -51,6 +58,9 @@ namespace LMS111Classic
             else
             {
                 System.Diagnostics.Debug.WriteLine("Write timer error!");
+                timer = new System.Timers.Timer(5000);
+                timer.Elapsed += Timer_Elapsed;
+                timer.Start();
             }
 
         }

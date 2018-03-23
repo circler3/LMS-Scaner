@@ -92,7 +92,6 @@ namespace Walker
                     port.StopBits = StopBits.One;
                     port.Open();
                 }
-                //await ModbusClassic.Program.SendStart(port, GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
             }
             catch (Exception err)
             {
