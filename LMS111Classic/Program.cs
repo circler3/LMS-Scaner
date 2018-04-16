@@ -56,6 +56,11 @@ namespace LMS111Classic
             }
         }
 
+        static void ProcessMessageRaw(int index, byte[] buffer, int len)
+        {
+
+        }
+
         static byte[][] segments = new byte[DEVICECOUNT][];
         static int[] offset = new int[DEVICECOUNT];
 
@@ -160,7 +165,8 @@ namespace LMS111Classic
                         //LEFT
                         DataBrokerLeft.Enqueue(n);
                     }
-                    else if (n.X > 4.58 && n.X < 5.88)
+                    //else if (n.X > 4.58 && n.X < 5.88)
+                    else if (n.X > 3.58 && n.X < 6.88)
                     {
                         //RIGHT
                         DataBrokerRight.Enqueue(n);
@@ -187,13 +193,13 @@ namespace LMS111Classic
             if (index == 0)
             {
                 //left
-                x = deltaXLeft - distance * Math.Cos(angle);
+                x = deltaXLeft - distance * Math.Cos(angle * Math.PI / 180);
             }
             else
             {
-                x = deltaXRight - distance * Math.Cos(angle);
+                x = deltaXRight - distance * Math.Cos(angle * Math.PI / 180);
             }
-            var z = totalH - distance * Math.Sin(angle);
+            var z = totalH - distance * Math.Sin(angle * Math.PI / 180);
             return new SpatialPoint() { X = x, Y = y, Z = z };
         }
 
