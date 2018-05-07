@@ -152,7 +152,7 @@ namespace LMS111Classic
                 //pointList.Add(new OriginPoint(distance, angel));
                 spList.Add(Format(indices, distance, angle, y));
             }
-            if (spList.Count < 170)
+            if (spList.Count < 30)
             {
                 return;
             }
@@ -186,6 +186,7 @@ namespace LMS111Classic
 
         static SpatialPoint Format(int index, double distance, double angle, double y)
         {
+            //距离原点x方向距离
             float deltaXLeft = 2.195f;
             float deltaXRight = 5.505f;
             float totalH = 2.25f;
@@ -216,8 +217,8 @@ namespace LMS111Classic
             System.IO.Directory.CreateDirectory(Folder);
             Folder = Folder + TimeStamp.ToString("yyyyMMdd");
             System.IO.Directory.CreateDirectory(Folder);
-            DataBrokerLeft = new DataBroker(Folder + "ScanL " + DateTime.Now.ToString("yyyyMMddHHmmss") + ".OBJ");
-            DataBrokerRight = new DataBroker(Folder + "ScanR " + DateTime.Now.ToString("yyyyMMddHHmmss") + ".OBJ");
+            DataBrokerLeft = new DataBroker("ScanL " + DateTime.Now.ToString("yyyyMMddHHmmss") + ".OBJ");
+            DataBrokerRight = new DataBroker("ScanR " + DateTime.Now.ToString("yyyyMMddHHmmss") + ".OBJ");
 
 
             for (int i = 0; i < DEVICECOUNT; i++)

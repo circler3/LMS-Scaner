@@ -5,12 +5,6 @@ VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Walker", "Walker\Walker.csproj", "{A1C5EA4C-C3ED-4173-9663-2A73A98FB25C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{31D81B96-6472-430F-BD05-668783079C89}"
-	ProjectSection(SolutionItems) = preProject
-		LICENSE = LICENSE
-		README.md = README.md
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS111Classic", "LMS111Classic\LMS111Classic.csproj", "{38CABF03-643B-478D-9E90-7A5F41E39A49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusClassic", "ModbusClassic\ModbusClassic.csproj", "{28530F27-2C3D-4535-95E0-3B8041B6BD4A}"

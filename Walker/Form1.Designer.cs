@@ -135,7 +135,7 @@
             this.tbPulseCount.Name = "tbPulseCount";
             this.tbPulseCount.Size = new System.Drawing.Size(100, 21);
             this.tbPulseCount.TabIndex = 1;
-            this.tbPulseCount.Text = "400000";
+            this.tbPulseCount.Text = "420000";
             // 
             // btnPLCSet
             // 
@@ -160,7 +160,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(115, 33);
+            this.btnStop.Location = new System.Drawing.Point(124, 33);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(70, 22);
             this.btnStop.TabIndex = 2;

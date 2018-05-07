@@ -19,19 +19,19 @@ namespace Walker
 
         private async void BtnFullScan_Click(object sender, EventArgs e)
         {
-            //Modbus.Program.CaptureSinglePhotoAsync("d:\\");
-            //ModbusClassic.Program.Capture5PhotosAsync("d:\\");
+            //接受激光探头数据
             Init(Convert.ToDouble(textBoxDistance.Text), Convert.ToDouble(textBoxTime.Text));
+            //拍照定时
             timer.Elapsed += Timer_Elapsed;
             timer.Interval = 5000;
             timer.AutoReset = false;
             timer.Start();
-
+            //扫描定时
             timerScan.Elapsed += TimerScan_Elapsed;
             timerScan.Interval = 1000;
             timerScan.AutoReset = true;
             timerScan.Start();
-
+            //返回原点定时
             timerBack.Elapsed += TimerBack_Elapsed;
             timerBack.Interval = Convert.ToDouble(textBoxTime.Text) * 1000;
             timerBack.AutoReset = false;
@@ -49,6 +49,7 @@ namespace Walker
         private async void TimerBack_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timerBack.Stop();
+            //发送行走返回指令
             await ModbusClassic.Program.SendBack(port, 2048);
         }
 
@@ -83,6 +84,7 @@ namespace Walker
         {
             try
             {
+                //打开与PLC的串口通信
                 if (port == null)
                 {
                     port = new SerialPort("COM" + GetUShort(tbPortNum.Text));

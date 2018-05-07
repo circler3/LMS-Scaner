@@ -32,7 +32,7 @@ namespace ModbusClassic
             // 写入距离二
             await master.WriteSingleCoilAsync(slaveId, 2054, true);
             await master.WriteSingleCoilAsync(slaveId, 2054, false);
-            // 写入距离二
+            // 启动
             await master.WriteSingleCoilAsync(slaveId, 2078, true);
             // read registers
             //var x = await master.ReadHoldingRegistersAsync(slaveId, address, 2);
@@ -109,26 +109,10 @@ namespace ModbusClassic
         {
             using (HttpClient client = new HttpClient())
             {
+
                 var response = await client.GetAsync("http://192.168.1.83/capture?cache_raw=31&block=true");
                 response.EnsureSuccessStatusCode();
                 var json = await response.Content.ReadAsStringAsync();
-                //                json = @"{
-                //   'id': 'kE5pogpXYEIrhI4aIxX2',
-                //   'jpeg_cache_path': {
-                //                    '1': '/images/tmp31.jpg',
-                //      '2': '/images/tmp32.jpg',
-                //      '5': '/images/tmp33.jpg'
-                //   },
-                //   'raw_cache_path': {
-                //                    '1': '/images/tmp26.tif',
-                //      '2': '/images/tmp27.tif',
-                //      '3': '/images/tmp28.tif',
-                //      '4': '/images/tmp29.tif',
-                //      '5': '/images/tmp30.tif'
-                //   },
-                //   'status': 'complete',
-                //   'time': '2016-01-28T02:28:30.000Z'
-                //}";
                 JObject address = JObject.Parse(json);
                 List<string> list = new List<string>();
                 for (int i = 1; i <= 5; i++)
