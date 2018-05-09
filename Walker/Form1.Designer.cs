@@ -46,9 +46,12 @@
             this.textBoxDistance = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxTime = new System.Windows.Forms.TextBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -143,7 +146,7 @@
             this.btnPLCSet.Name = "btnPLCSet";
             this.btnPLCSet.Size = new System.Drawing.Size(70, 22);
             this.btnPLCSet.TabIndex = 0;
-            this.btnPLCSet.Text = "锁定设置";
+            this.btnPLCSet.Text = "打开串口";
             this.btnPLCSet.UseVisualStyleBackColor = true;
             this.btnPLCSet.Click += new System.EventHandler(this.btnPLCSet_Click);
             // 
@@ -225,11 +228,28 @@
             this.textBoxTime.TabIndex = 9;
             this.textBoxTime.Text = "143";
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 205);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(590, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(44, 17);
+            this.toolStripStatusLabel1.Text = "Ready";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(604, 217);
+            this.ClientSize = new System.Drawing.Size(590, 227);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -241,7 +261,10 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -265,6 +288,8 @@
         private System.Windows.Forms.TextBox textBoxDistance;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxTime;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 

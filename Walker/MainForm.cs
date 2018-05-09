@@ -36,7 +36,15 @@ namespace Walker
             timerBack.Interval = Convert.ToDouble(textBoxTime.Text) * 1000;
             timerBack.AutoReset = false;
 
-            await ModbusClassic.Program.SendStart(port, GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
+            try
+            {
+                await ModbusClassic.Program.SendStart(port, GetUShort(tbRegisterAddress.Text), Convert.ToInt32(tbPulseCount.Text));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("与PLC通信发生错误");
+                throw ex;
+            }
             timerBack.Start();
         }
 
@@ -48,6 +56,7 @@ namespace Walker
 
         private async void TimerBack_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            StopProcedure();
             timerBack.Stop();
             //发送行走返回指令
             await ModbusClassic.Program.SendBack(port, 2048);
@@ -61,14 +70,36 @@ namespace Walker
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
-            //5个图像采集
-            ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
-            //单独图像拍摄
-            ModbusClassic.Program.CaptureSinglePhotoAsync(dataFolder);
+            try
+            {
+                //5个图像采集
+                ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("五目摄像机故障");
+                throw ex;
+            }
+            try
+            {
+                //单独图像拍摄
+                ModbusClassic.Program.CaptureSinglePhotoAsync(dataFolder);
+            }
+            catch (Exception exx)
+            {
+                MessageBox.Show("单独照相机故障");
+                throw exx;
+            }
+
             timer.Start();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
+        {
+            StopProcedure();
+        }
+
+        private void StopProcedure()
         {
             //停止大循环定时器
             timer.Stop();
@@ -94,6 +125,10 @@ namespace Walker
                     port.StopBits = StopBits.One;
                     port.Open();
                 }
+                else if (!port.IsOpen)
+                {
+                    port.Open();
+                }
             }
             catch (Exception err)
             {
@@ -103,18 +138,6 @@ namespace Walker
 
         private ushort GetUShort(string text)
         {
-            //if (Regex.IsMatch(text, @"/^\d+$/ "))
-            //{
-            //    return Convert.ToUInt16(text);
-            //}
-            //else if (Regex.IsMatch(text, @"^0x[a-f0-9]{1,2}$)|(^0X[A-F0-9]{1,2}$)|(^[A-F0-9]{1,2}$)|(^[a-f0-9]{1,2}$"))
-            //{
-            //    return Convert.ToUInt16(text, 16);
-            //}
-            //else
-            //{
-            //    throw new FormatException("输入数值不合法");
-            //}
             return Convert.ToUInt16(text);
         }
 
