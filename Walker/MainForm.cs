@@ -67,28 +67,28 @@ namespace Walker
             dataFolder = LMS111Classic.Program.Init(distance, totalSecond);
         }
 
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private async void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
             try
             {
                 //5个图像采集
-                ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
+                await ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("五目摄像机故障");
-                throw ex;
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
             }
             try
             {
                 //单独图像拍摄
-                ModbusClassic.Program.CaptureSinglePhotoAsync(dataFolder);
+                await ModbusClassic.Program.CaptureSinglePhotoAsync(dataFolder);
             }
             catch (Exception exx)
             {
                 MessageBox.Show("单独照相机故障");
-                throw exx;
+                MessageBox.Show(exx.Message + "\r\n" + exx.StackTrace);
             }
 
             timer.Start();
