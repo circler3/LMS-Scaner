@@ -12,7 +12,8 @@ namespace Walker
             InitializeComponent();
         }
 
-        System.Timers.Timer timer = new System.Timers.Timer();
+        System.Timers.Timer timerPhoto = new System.Timers.Timer();
+        System.Timers.Timer timerPhoto5 = new System.Timers.Timer();
         System.Timers.Timer timerBack = new System.Timers.Timer();
         System.Timers.Timer timerScan = new System.Timers.Timer();
         private string dataFolder;
@@ -21,11 +22,16 @@ namespace Walker
         {
             //接受激光探头数据
             Init(Convert.ToDouble(textBoxDistance.Text), Convert.ToDouble(textBoxTime.Text));
-            //拍照定时
-            timer.Elapsed += Timer_Elapsed;
-            timer.Interval = 5000;
-            timer.AutoReset = false;
-            timer.Start();
+            //单独拍照定时
+            timerPhoto.Elapsed += Timer_Elapsed;
+            timerPhoto.Interval = 5000;
+            timerPhoto.AutoReset = false;
+            timerPhoto.Start();
+            //5目相机拍照定时
+            timerPhoto5.Elapsed += TimerPhoto5_Elapsed; ;
+            timerPhoto5.Interval = 5000;
+            timerPhoto5.AutoReset = false;
+            timerPhoto5.Start();
             //扫描定时
             timerScan.Elapsed += TimerScan_Elapsed;
             timerScan.Interval = 1000;
@@ -48,10 +54,26 @@ namespace Walker
             timerBack.Start();
         }
 
-        private void TimerScan_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private async void TimerPhoto5_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            timerPhoto5.Stop();
+            try
+            {
+                //5个图像采集
+                await ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("五目摄像机故障");
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+            timerPhoto5.Start();
+        }
+
+        private async void TimerScan_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //扫描仪数据采集
-            LMS111Classic.Program.SendRequestAsync(dataFolder);
+            await LMS111Classic.Program.SendRequestAsync(dataFolder);
         }
 
         private async void TimerBack_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -69,17 +91,7 @@ namespace Walker
 
         private async void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            timer.Stop();
-            try
-            {
-                //5个图像采集
-                await ModbusClassic.Program.Capture5PhotosAsync(dataFolder);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("五目摄像机故障");
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
-            }
+            timerPhoto.Stop();
             try
             {
                 //单独图像拍摄
@@ -91,7 +103,7 @@ namespace Walker
                 MessageBox.Show(exx.Message + "\r\n" + exx.StackTrace);
             }
 
-            timer.Start();
+            timerPhoto.Start();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -102,11 +114,12 @@ namespace Walker
         private void StopProcedure()
         {
             //停止大循环定时器
-            timer.Stop();
-            //停止511写入文件数据循环
-            LMS111Classic.Program.Stop();
             //停止5个图像采集
             //停止单独图像拍摄
+            timerPhoto.Stop();
+            timerPhoto5.Stop();
+            //停止511写入文件数据循环
+            LMS111Classic.Program.Stop();
         }
 
         public SerialPort port;
