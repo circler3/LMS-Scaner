@@ -93,7 +93,7 @@ namespace ModbusClassic
                     }
                     catch
                     {
-
+                        throw;
                     }
                     finally
                     {
