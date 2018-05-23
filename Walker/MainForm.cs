@@ -49,7 +49,7 @@ namespace Walker
             catch (Exception ex)
             {
                 MessageBox.Show("与PLC通信发生错误");
-                throw ex;
+                //throw ex;
             }
             timerBack.Start();
         }
@@ -65,7 +65,7 @@ namespace Walker
             catch (Exception ex)
             {
                 MessageBox.Show("五目摄像机故障");
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+                //MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
             }
             timerPhoto5.Start();
         }
@@ -118,6 +118,7 @@ namespace Walker
             //停止单独图像拍摄
             timerPhoto.Stop();
             timerPhoto5.Stop();
+            timerScan.Stop();
             //停止511写入文件数据循环
             LMS111Classic.Program.Stop();
         }

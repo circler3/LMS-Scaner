@@ -82,6 +82,7 @@ namespace ModbusClassic
                                 var str = responseData.Split(',');
                                 count = Convert.ToInt32(str[1]) - 1;
                                 index = responseData.IndexOf(",BM6") + 1;
+                                continue;
                             }
                             if (current + bytes > count)
                             {
@@ -93,7 +94,7 @@ namespace ModbusClassic
                     }
                     catch
                     {
-                        throw;
+                        //throw;
                     }
                     finally
                     {
@@ -104,6 +105,54 @@ namespace ModbusClassic
                     }
                 });
         }
+
+        public static void PhotoThread(string dataFolder)
+        {
+            TcpClient client = new TcpClient("192.168.1.20", 8501);
+            var stream = client.GetStream();
+            stream.ReadTimeout = 100000;
+            client.ReceiveTimeout = 10000;
+            Byte[] data = new Byte[1024 * 1024];
+            // String to store the response ASCII representation.
+            String responseData = String.Empty;
+            var file = System.IO.File.Create(FileGen(0, "ss", dataFolder));
+            // Read the first batch of the TcpServer response bytes.
+
+            int current = 0;
+            int count = 0;
+            while (true)
+            {
+                try
+                {
+                    int index = 0;
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    if (responseData.StartsWith("BC,"))
+                    {
+                        var str = responseData.Split(',');
+                        count = Convert.ToInt32(str[1]) - 1;
+                        index = responseData.IndexOf(",BM6") + 1;
+                    }
+                    if (current + bytes > count)
+                    {
+                        bytes = count - current;
+                    }
+                    file.Write(data, index, bytes - index);
+                    current += bytes - index;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+
+            // Close everything.
+            file.Close();
+            stream.Close();
+            client.Close();
+        }
+
 
         public static async Task Capture5PhotosAsync(string dataFolder)
         {

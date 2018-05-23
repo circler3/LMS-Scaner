@@ -121,7 +121,7 @@
             this.tbPortNum.Name = "tbPortNum";
             this.tbPortNum.Size = new System.Drawing.Size(100, 21);
             this.tbPortNum.TabIndex = 3;
-            this.tbPortNum.Text = "6";
+            this.tbPortNum.Text = "11";
             // 
             // label1
             // 
